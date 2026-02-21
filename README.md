@@ -140,6 +140,7 @@ All external calls are mocked to demonstrate logic safely.
       logic/
       services/
       routes/
+      components/ – minimal typed React components
     examples/
     docs/
 
