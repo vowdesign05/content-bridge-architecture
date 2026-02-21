@@ -17,7 +17,7 @@ export function PostList({ posts, title = "Posts" }: Props) {
       {posts.length === 0 ? (
         <p>No posts found.</p>
       ) : (
-        <ul class="postlist">
+        <ul className="postlist">
           {posts.map((post) => (
             <li key={post.id}>
               <strong>{post.title}</strong>
