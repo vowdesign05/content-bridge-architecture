@@ -4,7 +4,7 @@ import { PostList } from "../../src/components/PostList";
 import { clampInt } from "../../src/utils/clampInt";
 import { resolvePosts, type FallbackMode, type Post } from "../../src/logic/resolvePosts";
 
-// ✅ モックWPデータ（本番WP/APIキー不要）
+// モックWPデータ（本番WP/APIキー不要）
 import wpPosts from "../../examples/wp-posts.json";
 
 type WpPost = Post & {
