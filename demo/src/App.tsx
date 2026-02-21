@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import "./App.css";
-import { PostList } from "../../src/components/PostList";
+import { PostList } from "./components/PostList";
 import { clampInt } from "../../src/utils/clampInt";
 import { resolvePosts, type FallbackMode, type Post } from "../../src/logic/resolvePosts";
 
