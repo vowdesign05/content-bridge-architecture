@@ -86,7 +86,7 @@ export default function App() {
       >
         <h2 style={{ marginTop: 0, fontSize: 16 }}>Query Controls</h2>
 
-        <div
+        <div className="query-row" 
           style={{
             display: "grid",
             gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
@@ -117,7 +117,7 @@ export default function App() {
             </select>
           </label>
 
-          <button onClick={onFetch} style={{ padding: "10px 12px", borderRadius: 10 }}>
+          <button onClick={onFetch} style={{ borderRadius: 10 }}>
             Fetch
           </button>
         </div>
@@ -138,8 +138,8 @@ export default function App() {
       </div>
 
       <details style={{ marginTop: 16, opacity: 0.9 }}>
-        <summary style={{ cursor: "pointer" }}>Show mock dataset</summary>
-        <pre style={{ fontSize: 12, overflowX: "auto" }}>
+        <summary style={{ cursor: "pointer",  textAlign: "left" }}>Show mock dataset</summary>
+        <pre style={{ fontSize: 12, overflowX: "auto", textAlign: "left" }}>
 {JSON.stringify(allPosts, null, 2)}
         </pre>
       </details>
