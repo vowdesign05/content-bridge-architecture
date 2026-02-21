@@ -168,6 +168,6 @@ All external calls are mocked to demonstrate logic safely.
 
 ## 👨‍💻 Author
 
-Tomo Shiotani\
+Tomohiro Shiotani\
 Frontend / Product-minded Developer\
 Building Shopify × WordPress integrations
