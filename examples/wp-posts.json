@@ -1,4 +1,23 @@
 [
-  { "id": 1, "title": "Hello World", "slug": "hello-world" },
-  { "id": 2, "title": "Shopify x WP", "slug": "shopify-wp" }
+  {
+    "id": 1,
+    "title": "Portable Console Guide",
+    "slug": "portable-console-guide",
+    "tax": "category",
+    "term": "portableconsole"
+  },
+  {
+    "id": 2,
+    "title": "Shopify x WordPress",
+    "slug": "shopify-wp",
+    "tax": "category",
+    "term": "portableconsole"
+  },
+  {
+    "id": 3,
+    "title": "Headless Notes",
+    "slug": "headless-notes",
+    "tax": "category",
+    "term": "headless"
+  }
 ]
