@@ -1,78 +1,148 @@
 import { useMemo, useState } from "react";
 import "./App.css";
 import { PostList, type DemoPost } from "./components/PostList";
-
-/* --- demo内で完結する簡易ロジック --- */
+import wpPosts from "./mock/wp-posts.json";
 
 type FallbackMode = "latest" | "none";
 
+type WpPost = DemoPost & {
+  tax: string;
+  term: string;
+};
+
+// demo内で完結する clamp
 function clampInt(v: string, min: number, max: number, fallback: number) {
   const n = Number(v);
   if (!Number.isFinite(n)) return fallback;
   return Math.max(min, Math.min(max, Math.trunc(n)));
 }
 
-function resolvePosts({
-  matched,
-  latest,
-  mode,
-}: {
-  matched: DemoPost[];
-  latest: DemoPost[];
-  mode: FallbackMode;
-}) {
+// demo内で完結する resolve
+function resolvePosts(args: { matched: DemoPost[]; latest: DemoPost[]; mode: FallbackMode }) {
+  const { matched, latest, mode } = args;
   if (matched.length > 0) return matched;
   return mode === "latest" ? latest : [];
 }
 
+const allPosts = wpPosts as unknown as WpPost[];
+
 export default function App() {
-  const [mode, setMode] = useState<FallbackMode>("latest");
-  const [limitInput, setLimitInput] = useState("3");
+  const [tax, setTax] = useState("category");
+  const [term, setTerm] = useState("portableconsole");
+  const [limitText, setLimitText] = useState("4");
+  const [fallbackMode, setFallbackMode] = useState<FallbackMode>("latest");
 
-  const limit = clampInt(limitInput, 1, 10, 3);
+  const limit = useMemo(() => clampInt(limitText, 1, 12, 4), [limitText]);
 
-  const latestPosts: DemoPost[] = [
-    { id: 1, title: "Latest Post A", slug: "latest-a" },
-    { id: 2, title: "Latest Post B", slug: "latest-b" },
-    { id: 3, title: "Latest Post C", slug: "latest-c" },
-  ];
+  // “Fetch”体験：本当のHTTPは叩かず、ボタンで状態更新するだけ
+  const [queryKey, setQueryKey] = useState(0);
+  const onFetch = () => setQueryKey((k) => k + 1);
 
-  const matchedPosts: DemoPost[] = [];
+  const trimmed = useMemo(() => {
+    return {
+      t: tax.trim().toLowerCase(),
+      r: term.trim().toLowerCase(),
+    };
+  }, [tax, term]);
 
-  const finalPosts = useMemo(() => {
-    return resolvePosts({
-      matched: matchedPosts.slice(0, limit),
-      latest: latestPosts.slice(0, limit),
-      mode,
-    });
-  }, [mode, limit]);
+  const matched = useMemo(() => {
+    // queryKeyを依存に入れることで「Fetch押した時だけ結果が更新される」体験になる
+    void queryKey;
+
+    if (!trimmed.t || !trimmed.r) return [];
+    return allPosts
+      .filter(
+        (p) => (p.tax ?? "").toLowerCase() === trimmed.t && (p.term ?? "").toLowerCase() === trimmed.r
+      )
+      .slice(0, limit);
+  }, [trimmed, limit, queryKey]);
+
+  const latest = useMemo(() => allPosts.slice(0, limit), [limit]);
+
+  const resolved = useMemo(
+    () => resolvePosts({ matched, latest, mode: fallbackMode }),
+    [matched, latest, fallbackMode]
+  );
+
+  const status =
+    matched.length > 0 ? `Matched: ${matched.length}` : `No match → fallback: ${fallbackMode}`;
 
   return (
-    <div style={{ padding: 40 }}>
-      <h1>Content Bridge – Demo</h1>
+    <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
+      <header style={{ marginBottom: 12 }}>
+        <h1 style={{ marginBottom: 6 }}>Content Bridge – Demo</h1>
+        <p style={{ opacity: 0.8, marginTop: 0 }}>
+          Simulated App Proxy query → “WP fetch” → match → fallback → render (mocked data).
+        </p>
+      </header>
 
-      <div style={{ marginBottom: 20 }}>
-        <label>
-          Fallback mode:
-          <select value={mode} onChange={(e) => setMode(e.target.value as FallbackMode)}>
-            <option value="latest">latest</option>
-            <option value="none">none</option>
-          </select>
-        </label>
+      <section
+        style={{
+          border: "1px solid rgba(255,255,255,0.15)",
+          borderRadius: 12,
+          padding: 16,
+          marginBottom: 16,
+        }}
+      >
+        <h2 style={{ marginTop: 0, fontSize: 16 }}>Query Controls</h2>
 
-        <div style={{ marginTop: 10 }}>
-          <label>
-            Limit:
-            <input
-              value={limitInput}
-              onChange={(e) => setLimitInput(e.target.value)}
-              style={{ marginLeft: 10, width: 60 }}
-            />
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(5, minmax(0, 1fr))",
+            gap: 12,
+            alignItems: "end",
+          }}
+        >
+          <label style={{ display: "grid", gap: 6 }}>
+            <span style={{ fontSize: 12, opacity: 0.8 }}>tax</span>
+            <input value={tax} onChange={(e) => setTax(e.target.value)} />
           </label>
+
+          <label style={{ display: "grid", gap: 6 }}>
+            <span style={{ fontSize: 12, opacity: 0.8 }}>term</span>
+            <input value={term} onChange={(e) => setTerm(e.target.value)} />
+          </label>
+
+          <label style={{ display: "grid", gap: 6 }}>
+            <span style={{ fontSize: 12, opacity: 0.8 }}>limit (1–12)</span>
+            <input value={limitText} onChange={(e) => setLimitText(e.target.value)} />
+          </label>
+
+          <label style={{ display: "grid", gap: 6 }}>
+            <span style={{ fontSize: 12, opacity: 0.8 }}>fallback</span>
+            <select value={fallbackMode} onChange={(e) => setFallbackMode(e.target.value as FallbackMode)}>
+              <option value="latest">latest</option>
+              <option value="none">none</option>
+            </select>
+          </label>
+
+          <button onClick={onFetch} style={{ padding: "10px 12px", borderRadius: 10 }}>
+            Fetch
+          </button>
         </div>
+
+        <p style={{ margin: "12px 0 0", fontSize: 12, opacity: 0.8 }}>
+          Status: <strong>{status}</strong> / limit used: <strong>{limit}</strong>
+        </p>
+      </section>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 16 }}>
+        <section style={{ border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12, padding: 16 }}>
+          <PostList title="Matched posts (tax/term)" posts={matched} />
+        </section>
+
+        <section style={{ border: "1px solid rgba(255,255,255,0.15)", borderRadius: 12, padding: 16 }}>
+          <PostList title="Rendered result (after fallback)" posts={resolved} />
+        </section>
       </div>
 
-      <PostList posts={finalPosts} title="Resolved Posts" />
-    </div>
+      <details style={{ marginTop: 16, opacity: 0.9 }}>
+        <summary style={{ cursor: "pointer" }}>Show mock dataset</summary>
+        <pre style={{ fontSize: 12, overflowX: "auto" }}>
+{JSON.stringify(allPosts, null, 2)}
+        </pre>
+      </details>
+    </main>
   );
 }

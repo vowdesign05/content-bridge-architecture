@@ -1,0 +1,6 @@
+[
+  { "id": 1, "title": "Portable Console Guide", "slug": "portable-console", "tax": "category", "term": "portableconsole" },
+  { "id": 2, "title": "Shopify x WordPress", "slug": "shopify-wp", "tax": "category", "term": "portableconsole" },
+  { "id": 3, "title": "Headless Notes", "slug": "headless-notes", "tax": "category", "term": "headless" },
+  { "id": 4, "title": "News Update", "slug": "news-update", "tax": "tag", "term": "news" }
+]
