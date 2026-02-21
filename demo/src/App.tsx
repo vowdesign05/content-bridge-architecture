@@ -1,151 +1,78 @@
 import { useMemo, useState } from "react";
 import "./App.css";
-import { PostList } from "./components/PostList";
-import { clampInt } from "../../src/utils/clampInt";
-import { resolvePosts, type FallbackMode, type Post } from "../../src/logic/resolvePosts";
+import { PostList, type DemoPost } from "./components/PostList";
 
-// モックWPデータ（本番WP/APIキー不要）
-import wpPosts from "../../examples/wp-posts.json";
+/* --- demo内で完結する簡易ロジック --- */
 
-type WpPost = Post & {
-  // 「taxonomyっぽい」属性をモックで持たせる（安全に“つないでる感”を出す）
-  tax?: string;
-  term?: string;
-};
+type FallbackMode = "latest" | "none";
 
-const allPosts = wpPosts as unknown as WpPost[];
+function clampInt(v: string, min: number, max: number, fallback: number) {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return fallback;
+  return Math.max(min, Math.min(max, Math.trunc(n)));
+}
+
+function resolvePosts({
+  matched,
+  latest,
+  mode,
+}: {
+  matched: DemoPost[];
+  latest: DemoPost[];
+  mode: FallbackMode;
+}) {
+  if (matched.length > 0) return matched;
+  return mode === "latest" ? latest : [];
+}
 
 export default function App() {
-  // ShopifyのmetafieldやApp Proxy queryを想定した入力欄
-  const [tax, setTax] = useState("category");
-  const [term, setTerm] = useState("portableconsole");
-  const [limitText, setLimitText] = useState("4");
-  const [fallbackMode, setFallbackMode] = useState<FallbackMode>("latest");
+  const [mode, setMode] = useState<FallbackMode>("latest");
+  const [limitInput, setLimitInput] = useState("3");
 
-  const limit = useMemo(() => clampInt(limitText, 1, 12, 4), [limitText]);
+  const limit = clampInt(limitInput, 1, 10, 3);
 
-  // ① “WPから取得した結果”をフィルタ（tax/term一致）
-  const matched = useMemo(() => {
-    const t = tax.trim();
-    const r = term.trim();
-    if (!t || !r) return [];
-    return allPosts
-      .filter((p) => p.tax === t && p.term === r)
-      .slice(0, limit);
-  }, [tax, term, limit]);
+  const latestPosts: DemoPost[] = [
+    { id: 1, title: "Latest Post A", slug: "latest-a" },
+    { id: 2, title: "Latest Post B", slug: "latest-b" },
+    { id: 3, title: "Latest Post C", slug: "latest-c" },
+  ];
 
-  // ② “最新記事”をモック（fallback用）
-  const latest = useMemo(() => allPosts.slice(0, limit), [limit]);
+  const matchedPosts: DemoPost[] = [];
 
-  // ③ Content Bridgeの根幹：一致しない時のfallback解決
-  const resolved = useMemo(
-    () => resolvePosts({ matched, latest, mode: fallbackMode }),
-    [matched, latest, fallbackMode]
-  );
-
-  // ④ UI表示：Matched / Resolvedの違いが見えるように
-  const statusLabel =
-    matched.length > 0
-      ? `Matched: ${matched.length}`
-      : `No match → fallback: ${fallbackMode}`;
+  const finalPosts = useMemo(() => {
+    return resolvePosts({
+      matched: matchedPosts.slice(0, limit),
+      latest: latestPosts.slice(0, limit),
+      mode,
+    });
+  }, [mode, limit]);
 
   return (
-    <main style={{ padding: 24, maxWidth: 860, margin: "0 auto" }}>
-      <header style={{ marginBottom: 16 }}>
-        <h1 style={{ marginBottom: 8 }}>Content Bridge – Demo</h1>
-        <p style={{ opacity: 0.8, marginTop: 0 }}>
-          Simulates <strong>Shopify query → WP fetch → match → fallback → render</strong> using mocked WordPress data.
-        </p>
-      </header>
+    <div style={{ padding: 40 }}>
+      <h1>Content Bridge – Demo</h1>
 
-      <section
-        style={{
-          border: "1px solid rgba(255,255,255,0.15)",
-          borderRadius: 12,
-          padding: 16,
-          marginBottom: 16,
-        }}
-      >
-        <h2 style={{ marginTop: 0, fontSize: 16 }}>Query Controls (App Proxy / Metafield simulation)</h2>
+      <div style={{ marginBottom: 20 }}>
+        <label>
+          Fallback mode:
+          <select value={mode} onChange={(e) => setMode(e.target.value as FallbackMode)}>
+            <option value="latest">latest</option>
+            <option value="none">none</option>
+          </select>
+        </label>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, minmax(0, 1fr))",
-            gap: 12,
-            alignItems: "end",
-          }}
-        >
-          <label style={{ display: "grid", gap: 6 }}>
-            <span style={{ fontSize: 12, opacity: 0.8 }}>tax</span>
-            <input value={tax} onChange={(e) => setTax(e.target.value)} />
-          </label>
-
-          <label style={{ display: "grid", gap: 6 }}>
-            <span style={{ fontSize: 12, opacity: 0.8 }}>term</span>
-            <input value={term} onChange={(e) => setTerm(e.target.value)} />
-          </label>
-
-          <label style={{ display: "grid", gap: 6 }}>
-            <span style={{ fontSize: 12, opacity: 0.8 }}>limit (1–12)</span>
+        <div style={{ marginTop: 10 }}>
+          <label>
+            Limit:
             <input
-              value={limitText}
-              onChange={(e) => setLimitText(e.target.value)}
-              inputMode="numeric"
+              value={limitInput}
+              onChange={(e) => setLimitInput(e.target.value)}
+              style={{ marginLeft: 10, width: 60 }}
             />
           </label>
-
-          <label style={{ display: "grid", gap: 6 }}>
-            <span style={{ fontSize: 12, opacity: 0.8 }}>fallback</span>
-            <select
-              value={fallbackMode}
-              onChange={(e) => setFallbackMode(e.target.value as FallbackMode)}
-            >
-              <option value="latest">latest</option>
-              <option value="none">none</option>
-            </select>
-          </label>
         </div>
-
-        <p style={{ margin: "12px 0 0", fontSize: 12, opacity: 0.8 }}>
-          Status: <strong>{statusLabel}</strong> / limit used: <strong>{limit}</strong>
-        </p>
-      </section>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
-          gap: 16,
-        }}
-      >
-        <section
-          style={{
-            border: "1px solid rgba(255,255,255,0.15)",
-            borderRadius: 12,
-            padding: 16,
-          }}
-        >
-          <PostList title="Matched posts (tax/term)" posts={matched} />
-        </section>
-
-        <section
-          style={{
-            border: "1px solid rgba(255,255,255,0.15)",
-            borderRadius: 12,
-            padding: 16,
-          }}
-        >
-          <PostList title="Rendered result (after fallback)" posts={resolved} />
-        </section>
       </div>
 
-      <details style={{ marginTop: 16, opacity: 0.9 }}>
-        <summary style={{ cursor: "pointer" }}>Show mock dataset</summary>
-        <pre style={{ fontSize: 12, overflowX: "auto" }}>
-{JSON.stringify(allPosts.slice(0, 20), null, 2)}
-        </pre>
-      </details>
-    </main>
+      <PostList posts={finalPosts} title="Resolved Posts" />
+    </div>
   );
 }

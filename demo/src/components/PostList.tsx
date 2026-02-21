@@ -1,7 +1,11 @@
-import type { Post } from "../logic/resolvePosts";
+export type DemoPost = {
+  id: number | string;
+  title: string;
+  slug: string;
+};
 
 type Props = {
-  posts: Post[];
+  posts: DemoPost[];
   title?: string;
 };
 
