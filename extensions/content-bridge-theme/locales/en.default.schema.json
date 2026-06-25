@@ -1,0 +1,91 @@
+{
+  "content_bridge_post": {
+    "name": "Content Bridge Post",
+    "settings": {
+      "heading_mode": {
+        "label": "Heading style",
+        "info": "Choose how the section heading is rendered.",
+        "options": {
+          "custom": "Custom heading",
+          "none": "No heading"
+        }
+      },
+      "heading": {
+        "label": "Heading"
+      },
+      "fallback_heading": {
+        "label": "Heading when fallback (latest posts) is shown"
+      },
+      "heading_size": {
+        "label": "Heading size",
+        "info": "Use Theme default to inherit the theme's heading styles. Choose a size only when you need to override it.",
+        "options": {
+          "theme": "Theme default",
+          "sm": "Small",
+          "md": "Medium",
+          "lg": "Large",
+          "xl": "Extra large"
+        }
+      },
+      "container_mode": {
+        "label": "Section width",
+        "info": "Use a theme wrapper when possible. Choose Custom max width only when the theme wrappers do not fit this section.",
+        "options": {
+          "none": "Theme default (no wrapper)",
+          "page_width": "Use .page-width wrapper",
+          "container": "Use .container wrapper",
+          "custom": "Custom max width"
+        }
+      },
+      "custom_max_width": {
+        "label": "Custom max width",
+        "info": "Used only when Section width is Custom max width."
+      },
+      "columns": {
+        "label": "Columns (desktop)"
+      },
+      "padding_y": {
+        "label": "Vertical padding",
+        "options": {
+          "s": "Small",
+          "m": "Medium",
+          "l": "Large"
+        }
+      },
+      "limit": {
+        "label": "Number of posts"
+      },
+      "tax": {
+        "label": "Taxonomy (WordPress)",
+        "info": "Choose whether the matching term should be compared with WordPress categories or tags.",
+        "options": {
+          "latest": "Latest posts (no filter)",
+          "category": "Category",
+          "tag": "Tag"
+        }
+      },
+      "term_source": {
+        "label": "Store term source",
+        "info": "The selected store value is normalized and matched against the chosen WordPress category or tag. Product metafield custom.content_bridge overrides this source when set.",
+        "options": {
+          "vendor": "Product vendor",
+          "product_type": "Product type",
+          "first_tag": "First product tag",
+          "collection_handle": "First collection handle",
+          "custom": "Custom term"
+        }
+      },
+      "term_custom": {
+        "label": "Custom term",
+        "info": "Used only when Store term source is Custom term."
+      },
+      "term_minlen": {
+        "label": "Minimum term length (optional)",
+        "info": "If term length is less than this value, it will be treated as invalid."
+      },
+      "fallback_latest": {
+        "label": "If filtered posts are empty, show latest posts instead"
+      }
+    }
+  }
+}

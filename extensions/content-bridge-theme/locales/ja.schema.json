@@ -1,0 +1,91 @@
+{
+  "content_bridge_post": {
+    "name": "Content Bridge 投稿",
+    "settings": {
+      "heading_mode": {
+        "label": "見出しの表示",
+        "info": "セクション見出しを表示するかどうかを選択します。",
+        "options": {
+          "custom": "カスタム見出し",
+          "none": "見出しなし"
+        }
+      },
+      "heading": {
+        "label": "見出し"
+      },
+      "fallback_heading": {
+        "label": "最新記事を表示するときの見出し"
+      },
+      "heading_size": {
+        "label": "見出しサイズ",
+        "info": "テーマの見出しスタイルを引き継ぐ場合は「テーマ標準」を使用します。必要な場合のみ別サイズを選択してください。",
+        "options": {
+          "theme": "テーマ標準",
+          "sm": "小",
+          "md": "中",
+          "lg": "大",
+          "xl": "特大"
+        }
+      },
+      "container_mode": {
+        "label": "セクション幅",
+        "info": "可能な場合はテーマのラッパーを使用してください。合わない場合のみカスタム最大幅を選択します。",
+        "options": {
+          "none": "テーマ標準",
+          "page_width": ".page-width を使用",
+          "container": ".container を使用",
+          "custom": "カスタム最大幅"
+        }
+      },
+      "custom_max_width": {
+        "label": "カスタム最大幅",
+        "info": "セクション幅が「カスタム最大幅」の場合のみ使用されます。"
+      },
+      "columns": {
+        "label": "列数（PC）"
+      },
+      "padding_y": {
+        "label": "上下余白",
+        "options": {
+          "s": "小",
+          "m": "中",
+          "l": "大"
+        }
+      },
+      "limit": {
+        "label": "表示件数"
+      },
+      "tax": {
+        "label": "タクソノミー（WordPress）",
+        "info": "ストア側の値を、WordPressのカテゴリまたはタグのどちらと照合するかを選択します。",
+        "options": {
+          "latest": "最新記事（フィルターなし）",
+          "category": "カテゴリ",
+          "tag": "タグ"
+        }
+      },
+      "term_source": {
+        "label": "ストア側の照合元",
+        "info": "選択したストア側の値を正規化し、選択したWordPressのカテゴリまたはタグと照合します。商品メタフィールド custom.content_bridge が設定されている場合は、その値が優先されます。",
+        "options": {
+          "vendor": "商品ベンダー",
+          "product_type": "商品タイプ",
+          "first_tag": "最初の商品タグ",
+          "collection_handle": "最初のコレクションhandle",
+          "custom": "カスタムターム"
+        }
+      },
+      "term_custom": {
+        "label": "カスタムターム",
+        "info": "ストア側の照合元がカスタムタームの場合のみ使用されます。"
+      },
+      "term_minlen": {
+        "label": "タームの最小文字数（任意）",
+        "info": "タームの文字数がこの値より短い場合は、無効として扱います。"
+      },
+      "fallback_latest": {
+        "label": "一致する記事がない場合、最新記事を表示する"
+      }
+    }
+  }
+}

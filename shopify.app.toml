@@ -1,0 +1,42 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "81fbf8b978983516a7e7fb3047cb2007"
+name = "content-bridge"
+application_url = "https://content-bridge.fly.dev"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2025-10"
+
+[[webhooks.subscriptions]]
+compliance_topics = ["customers/data_request", "customers/redact", "shop/redact"]
+uri = "/webhooks/compliance"
+
+[[webhooks.subscriptions]]
+topics = ["app/scopes_update"]
+uri = "/webhooks/app/scopes_update"
+
+[[webhooks.subscriptions]]
+topics = ["app/uninstalled"]
+uri = "/webhooks/app/uninstalled"
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "write_products"
+optional_scopes = [ ]
+use_legacy_install_flow = false
+
+[auth]
+redirect_urls = [
+  "https://content-bridge.fly.dev/auth/callback",
+  "https://content-bridge.fly.dev/auth/shopify/callback",
+  "https://content-bridge.fly.dev/api/auth/callback"
+]
+
+[app_proxy]
+url = "https://content-bridge.fly.dev/proxy"
+subpath = "content-bridge"
+prefix = "apps"

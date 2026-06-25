@@ -1,0 +1,119 @@
+.sec9 .tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 28px 0 24px;
+  border-bottom: 1px solid rgba(17, 24, 39, 0.14);
+}
+
+.sec9 .tab-btn {
+  position: relative;
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 20px 12px;
+  border: 0;
+  background: transparent;
+  color: #6b7280;
+  font: inherit;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.sec9 .tab-btn::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 3px;
+  border-radius: 999px 999px 0 0;
+  background: #111827;
+  opacity: 0;
+  transform: scaleX(0.65);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.sec9 .tab-btn:hover,
+.sec9 .tab-btn:focus-visible,
+.sec9 .tab-btn.is-active {
+  color: #111827;
+}
+
+.sec9 .tab-btn:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.28);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+.sec9 .tab-btn.is-active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+.sec9 .tab-wrapper {
+  position: relative;
+}
+
+.sec9 .tab-contents {
+  display: block;
+}
+
+.sec9 .tab-wrapper.is-ready .tab-contents {
+  display: none;
+}
+
+.sec9 .tab-wrapper.is-ready .tab-contents.is-active {
+  display: block;
+}
+
+.sec9 .tab_inner {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+  gap: 40px;
+  align-items: start;
+}
+
+.sec9 .thumb img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sec9 .listbox ol {
+  margin: 0;
+  padding-left: 1.45em;
+}
+
+.sec9 .listbox li + li {
+  margin-top: 12px;
+}
+
+@media (max-width: 767px) {
+  .sec9 .tabs {
+    gap: 0;
+    margin: 22px 0 20px;
+  }
+
+  .sec9 .tab-btn {
+    flex: 1 1 50%;
+    min-width: 0;
+    padding-right: 10px;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+
+  .sec9 .tab_inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
