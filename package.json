@@ -21,7 +21,8 @@
     "prisma": "prisma",
     "graphql-codegen": "graphql-codegen",
     "vite": "vite",
-    "typecheck": "react-router typegen && tsc --noEmit"
+    "typecheck": "react-router typegen && tsc --noEmit",
+    "test:auth": "tsc app/session-migration.server.ts --outDir .cache/auth-tests --module NodeNext --moduleResolution NodeNext --target ES2022 --strict --skipLibCheck && node --test tests/session-migration.test.mjs"
   },
   "engines": {
     "node": ">=20.19 <22 || >=22.12"

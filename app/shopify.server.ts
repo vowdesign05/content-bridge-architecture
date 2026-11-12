@@ -7,6 +7,9 @@ import {
 } from "@shopify/shopify-app-react-router/server";
 import { PrismaSessionStorage } from "@shopify/shopify-app-session-storage-prisma";
 import { prisma } from "./db.server";
+import { createSessionMigration } from "./session-migration.server";
+
+const migration = createSessionMigration(new PrismaSessionStorage(prisma));
 
 export const CONTENT_BRIDGE_PLAN =
   (process.env.SHOPIFY_BILLING_PLAN_NAME || "Content Bridge Monthly") as "Content Bridge Monthly";
@@ -38,7 +41,7 @@ const shopify = shopifyApp({
   scopes: process.env.SCOPES?.split(","),
   appUrl: process.env.SHOPIFY_APP_URL || "",
   authPathPrefix: "/api/auth",
-  sessionStorage: new PrismaSessionStorage(prisma),
+  sessionStorage: migration.sessionStorage,
   distribution: AppDistribution.AppStore,
   billing,
   future: {
@@ -48,6 +51,8 @@ const shopify = shopifyApp({
     ? { customShopDomains: [process.env.SHOP_CUSTOM_DOMAIN] }
     : {}),
 });
+
+shopify.authenticate.admin = migration.wrapAdmin(shopify.authenticate.admin);
 
 export default shopify;
 export const apiVersion = ApiVersion.October25;
