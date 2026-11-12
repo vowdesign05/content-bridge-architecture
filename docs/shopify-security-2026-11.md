@@ -8,7 +8,7 @@ Reviewed on 2026-11-12 for the Content Bridge public app.
 | --- | --- |
 | Expiring offline access tokens | Enabled in `app/shopify.server.ts`. Production has 4 offline sessions and 0 non-expiring sessions. |
 | Legacy-session migration | Admin-only migration wrapper added. It never deletes or preemptively overwrites a legacy row, and it does not affect webhooks, app proxy, or background reads. |
-| IP allowlist | Production egress identified for the free ASN + country option. Shopify Dev Dashboard enforcement still needs owner confirmation. |
+| IP allowlist | Enabled in Shopify Dev Dashboard with AS30081 restricted to NL. |
 | Bulk operations scopes | Not applicable. This repository contains no bulk query or mutation use. |
 
 Shopify requires the IP allowlist for public apps by November 20, 2026 at
@@ -22,16 +22,20 @@ Content Bridge runs one Fly Machine in `ams`. Production observations on
 `2605:4c40:119:f110::b470`. Both resolve to CacheFly, AS30081, in NL
 (Netherlands). These are observations, not static addresses to register.
 
-In the Shopify Dev Dashboard for client ID
-`81fbf8b978983516a7e7fb3047cb2007`, configure:
+The Shopify Dev Dashboard for client ID
+`81fbf8b978983516a7e7fb3047cb2007` is configured with:
 
 - Network (ASN): `AS30081`
 - Limit ASN to country: `Netherlands`
-- Enforcement: enabled after testing against recent traffic
+- Enforcement: enabled
 
 This uses Shopify's supported ASN + country mode and does not require buying a
 Fly static egress address. Recheck the rule whenever the Fly region, provider,
 or outbound network changes.
+
+The owner confirmed the saved settings at 23:02 JST on 2026-11-12. The Dev
+Dashboard showed the policy as Enabled, the enforcement switch on, ASN 30081,
+and Netherlands selected.
 
 ## Token behavior
 
