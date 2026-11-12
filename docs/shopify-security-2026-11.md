@@ -55,6 +55,13 @@ Two of the four production refresh tokens were valid at the audit time. An
 expired refresh token requires the merchant to reopen the embedded app, which
 lets the SDK acquire a fresh token pair. Token values were not read or logged.
 
+At 23:04 JST on 2026-11-12, the owner opened Content Bridge in
+`content-bridge-2.myshopify.com`. Production stored a fresh expiring access
+token and refresh token for that shop. At 23:05 JST, a read-only
+`currentAppInstallation` GraphQL request from the Fly Machine succeeded with
+HTTP 200 while IP allowlist enforcement was enabled. No token value was
+printed or copied outside the production process.
+
 ## Verification
 
 Run:
